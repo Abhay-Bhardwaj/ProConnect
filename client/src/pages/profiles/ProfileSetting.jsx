@@ -138,9 +138,9 @@ export default function Profile() {
           <div className='bg-white rounded-lg p-4 shadow-md'>
             <div className='flex flex-col '>
               <div>
-                <img src='/public/assets/cover-image.jpg' alt='cover' className='w-full h-40 object-cover rounded-md' />
+                <img src='/assets/cover-image.jpg' alt='cover' className='w-full h-40 object-cover rounded-md' />
               </div>
-              <img src={profileData.user?.image ? profileData.image : '/src/assets/defaultUserDP.jpg'} alt='profile' className='relative -top-10 w-32 h-32 rounded-full -mb-10' />
+              <img src={profileData.user?.image ? profileData.image : '/assets/defaultUserDP.jpg'} alt='profile' className='relative -top-10 w-32 h-32 rounded-full -mb-10' />
             </div>
             <div className='flex flex-row gap-1'>
               <div className='flex flex-col'>

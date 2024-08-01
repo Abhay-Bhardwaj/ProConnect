@@ -48,9 +48,9 @@ export default function userProfile() {
             <div className='bg-white rounded-lg p-4 shadow-md'>
               <div className='flex flex-col '>
                 <div>
-                  <img src='/public/assets/cover-image.jpg' alt="cover" className='w-full h-40 object-cover rounded-md' />
+                  <img src='/assets/cover-image.jpg' alt="cover" className='w-full h-40 object-cover rounded-md' />
                 </div>
-                <img src={userInfo.image ? userInfo.image : '/public/assets/defaultuserDP.jpg'} alt="profile" className='relative -top-10 w-32 h-32 rounded-full -mb-10' />
+                <img src={userInfo.image ? userInfo.image : '/assets/defaultUserDP.jpg'} alt="profile" className='relative -top-10 w-32 h-32 rounded-full -mb-10' />
               </div>
               <div>
                 <h1 className='text-2xl font-semibold'>{userInfo.firstName} {userInfo.lastName}</h1>

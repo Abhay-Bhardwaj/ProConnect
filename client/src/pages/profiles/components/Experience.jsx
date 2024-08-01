@@ -4,7 +4,7 @@ export default function Experience({item}) {
   return (
     <div className='w-full h-min p-2 flex flex-row gap-2'>
         <div>
-            <img src={item.image? item?.image:'/public/assets/demo-Company-logo.png'} className='w-24' alt={item.title}/>
+            <img src={item.image? item?.image:'/assets/demo-Company-logo.png'} className='w-24' alt={item.title}/>
         </div>
         <div className='flex flex-col'>
             <h3 className='text-lg font-semibold'>{item.title}</h3>

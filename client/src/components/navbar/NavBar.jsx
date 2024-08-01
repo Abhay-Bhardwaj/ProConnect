@@ -10,7 +10,7 @@ export default function NavBar() {
   const {user}=useSelector((state) => state.user);
   return (
     <nav className='sticky flex p-5 top-0 w-full h-11 z-10 bg-white items-center justify-between'>
-      <img src='/public/assets/logo.png' alt='logo' className='h-8'/>
+      <img src='/assets/logo.png' alt='logo' className='h-8'/>
       <div className='flex flex-row gap-4 justify-center'>
         <a className='grid place-items-center' href='/'>
           <div className='group cursor-pointer grid place-items-center hover:stroke-glow'>
