@@ -10,10 +10,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      state.user = action.payload?.user;    },
+      state.user = action.payload?.user;    
+    },
     removeUserInfo: (state) => {
       state.user = null;
-      Cookies.remove('jwt', { path: '/' });
+      Cookies.remove('jwt', { path: '/', secure:true, sameSite:"none" });
     },
   },
 });
