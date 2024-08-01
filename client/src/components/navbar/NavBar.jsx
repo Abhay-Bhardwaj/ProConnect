@@ -4,6 +4,7 @@ import { Button } from '../ui/button'
 import { useDispatch, useSelector } from 'react-redux';
 import { removeUserInfo } from '@/store/userSlice';
 import { Navigate } from 'react-router-dom';
+import LogoutButton from '../LogoutButton';
 
 export default function NavBar() {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ export default function NavBar() {
         }
         {
           user? (
-            <Button className='h-[90%] bg-input' onClick={()=>{dispatch(removeUserInfo())}}>Log Out</Button>
+            <LogoutButton/>
           ):(
             <div className='flex gap-2'>
              <a href='/auth'><Button className='h-[90%] bg-input'>Sign In</Button></a>

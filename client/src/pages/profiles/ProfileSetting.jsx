@@ -244,7 +244,7 @@ export default function Profile() {
             </div>
           </div>
           <div className='sticky bottom-0 flex flex-row bg-foreground rounded-b-xl w-full justify-end '>
-              <Button className='w-min h-min m-1 bg-input' disable={updatingLoading} onClick={handleSave}>{updatingLoading? <Loader2 className='animate-spin'/> : 'Update Profile'}</Button>
+              <Button className='w-min h-min m-1 bg-input' disabled={updatingLoading} onClick={handleSave}>{updatingLoading? <Loader2 className='animate-spin'/> : 'Update Profile'}</Button>
           </div>
         </div>
 

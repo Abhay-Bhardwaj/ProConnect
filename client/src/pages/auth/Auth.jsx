@@ -8,12 +8,14 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from '@/utils/constants';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '@/store/userSlice';
+import { Loader } from 'lucide-react';
 
 
 const Auth = () => {
   const [tabHeight, setTabHeight] = useState('auto');
   const contentRef = useRef(null);
   const [activeTab, setActiveTab] = useState('logIn');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -58,6 +60,7 @@ const Auth = () => {
   }
   const handleLogin = async () => {
     if(validateLogin()){
+      setLoading(true);
       try{
         const response= await apiClient.post(LOGIN_ROUTE, {
             email,
@@ -73,12 +76,15 @@ const Auth = () => {
       }catch(err){
         console.log(err);
         toast.error(err.response? err.response.data: err.message);
+      }finally{
+        setLoading(false);
       }
     }
   }
   const handleSignUp = async () => {
     if(validateSingUp()){
       try{
+        setLoading(true);
         const response= await apiClient.post(SIGNUP_ROUTE, {
             email,
             password,
@@ -94,6 +100,8 @@ const Auth = () => {
       }catch(err){
         console.log(err);
         toast.error(err.response.data);
+      }finally{
+        setLoading(false);
       }
     }
   }
@@ -135,7 +143,11 @@ const Auth = () => {
                     <label className='text-sm font-semibold text-foreground'>Password</label>
                     <Input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} className='w-full p-2 border-2 border-gray-200 rounded-md' />
                   </div>
-                  <Button onKeyDown={()=>handleSignUp()} onClick={()=>handleLogin()} className="bg-glow my-4">Log In</Button>
+                  <Button disabled={loading} onKeyDown={()=>handleSignUp()} onClick={()=>handleLogin()} className="bg-glow my-4">
+                    {
+                      loading?<Loader className='animate-spin'/>: 'Log In'
+                    }
+                  </Button>
                 </div>
               </TabsContent>
               <TabsContent value='signIn'>
@@ -156,7 +168,11 @@ const Auth = () => {
                     <label className='text-sm font-semibold text-foreground'>Confirm Password</label>
                     <Input type='password' value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='w-full p-2 border-2 border-gray-200 rounded-md' />
                   </div>
-                  <Button onKeyDown={()=>handleSignUp()} onClick={()=>handleSignUp()} className="bg-glow my-2">Sign Up</Button>
+                  <Button disabled={loading} onKeyDown={()=>handleSignUp()} onClick={()=>handleSignUp()} className="bg-glow my-2">
+                    {
+                      loading?<Loader className='animate-spin'/>: 'Sign Up'
+                    }
+                  </Button>
                 </div>
               </TabsContent>
             </div>

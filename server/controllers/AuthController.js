@@ -102,3 +102,8 @@ export const userInfo=async(req,res)=>{
         return res.status(500).send("Error in getting Info:"+err.message);
     }
 }
+
+export const logOut=async(req,res)=>{
+        res.cookie('jwt', '', { maxAge: 1, secure: true, sameSite: 'none'});
+        res.status(200).send('Logged out successfully');
+}

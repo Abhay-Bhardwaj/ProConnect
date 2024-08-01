@@ -1,4 +1,6 @@
+import { LOGOUT_ROUTE } from '@/utils/constants';
 import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const initialState = {
@@ -14,10 +16,23 @@ const userSlice = createSlice({
     },
     removeUserInfo: (state) => {
       state.user = null;
-      Cookies.remove('jwt', { path: '/', secure:true, sameSite:"none" });
     },
   },
 });
 
 export const { setUserInfo, removeUserInfo } = userSlice.actions;
+
+export const logout = () => async (dispatch) => {
+  try {
+    await axios.post(LOGOUT_ROUTE, {}, { withCredentials: true });
+    Cookies.remove('jwt', { path: '/', secure: true, sameSite:'none'});
+    dispatch(removeUserInfo());
+  } catch (error) {
+    console.error('Error logging out', error);
+  }
+};
+
+
+
+
 export default userSlice.reducer;
