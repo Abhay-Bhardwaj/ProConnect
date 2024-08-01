@@ -13,10 +13,9 @@ const dataBase_URL=process.env.MONGO_URI;
 const origin=process.env.ORIGIN || 'http://localhost:3000';
 
 
-
 app.use(cors(
     {
-        origin:[origin],
+        origin:origin,
         credentials:true
     }
 ));
