@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 /* Logic For JWT TOKEN */
-const maxAge=7*24*60*60*60;
+const maxAge=7*24*60*60;
 
 const createToken=(email,userId)=>{
     return jwt.sign({email,userId},process.env.JWT_SECRET,{expiresIn:maxAge});
@@ -27,7 +27,7 @@ export const signUp= async (req,res)=>{
         const token=createToken(user.email,user.id);
 
         /* Adding JWT Cookies to the Response*/
-        res.cookie('jwt',token,{maxAge:maxAge,secure:true, sameSite:"none"});
+        res.cookie('jwt',token,{maxAge:maxAge*1000,secure:true, sameSite:"none"});
 
         return res.status(201).json({user:{
             email:user.email,
