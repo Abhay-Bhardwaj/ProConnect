@@ -1,3 +1,5 @@
+import cloudinaryConfig from "../config/cloudinaryConfig.js";
+import { deleteImage, uploader } from "../helper/clouduploader.js";
 import Profile from "../models/ProfileModel.js";
 import User from "../models/UserModel.js";
 
@@ -47,7 +49,6 @@ export const updateProfile = async (req, res) => {
             firstName: newUserData.firstName,
             lastName: newUserData.lastName,
             headline: newUserData.headline,
-            image: newUserData.image,
             updatedAt: new Date()
         });
 
@@ -63,6 +64,43 @@ export const updateProfile = async (req, res) => {
         return res.status(200).send("Profile Updated");
     } catch (err) {
         console.log('Error at updateProfile:', err.message);
+        return res.status(500).send("Internal Server Error: " + err.message);
+    }
+}
+
+export const uploadProfileImage = async (req, res) => {
+    try{
+        
+        if (!req.file) {
+            return res.status(200).send('no file');
+        }
+        
+      
+          const filePath = req.file.path;
+      
+          // Upload to Cloudinary
+          const result = await uploader({ filePath });
+          // Here you can update the user's profile with the image URL
+          // For example, updating the user's profile in the database
+          const userId = req.userId;
+          const user= await User.findOne({_id:userId});
+          if(!user){
+              return res.status(400).send("User Not Found");
+          }
+          if(user.image){
+                const getPublicId = (imageURL) => {
+                    const parts = imageURL.split('/');
+                    const filename = parts[parts.length - 2]+'/'+parts[parts.length - 1];
+                    const publicId = filename.split('.')[0];
+                    return publicId;
+                };
+                await deleteImage(getPublicId(user.image));
+          }
+          await User.updateOne({ _id: userId }, { image: result});
+          res.status(200).send('Image uploaded successfully');
+
+    }catch(err){
+        console.log('Error at ProfileImageChange:', err.message);
         return res.status(500).send("Internal Server Error: " + err.message);
     }
 }

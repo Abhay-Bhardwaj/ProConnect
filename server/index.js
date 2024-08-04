@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import authRoutes from './routes/AuthRoutes.js';
 import profileRoutes from './routes/ProfileRoutes.js';
+import ConnectionRoutes from './routes/ConnectionRoutes.js';
 
 dotenv.config();
 const app=express();
@@ -21,6 +22,7 @@ app.use(cors(
 ));
 app.use(cookieParser());
 app.use(express.json());
+app.use("/image", express.static("/uploades/profile-image"));
 
 
 app.get('/',(req,res)=>{
@@ -30,6 +32,7 @@ app.get('/',(req,res)=>{
 /* Routes*/
 app.use('/api/auth',authRoutes);
 app.use('/api/profile',profileRoutes);
+app.use('/api/connection',ConnectionRoutes);
 
 
 

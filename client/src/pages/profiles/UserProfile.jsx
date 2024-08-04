@@ -1,12 +1,13 @@
-import { GET_PROFILE_INFO } from '@/utils/constants';
-import axios from 'axios';
+import { FOLLOW_USER, GET_PROFILE_INFO, UNFOLLOW_USER } from '@/utils/constants';
 import React, { useEffect, useState } from 'react'
 import {useParams} from "react-router-dom";
 import { toast } from 'sonner';
 import Experience from './components/Experience';
 import { UserRoundPen } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from '@/components/Loading';
+import { Button } from '@/components/ui/button';
+import { apiClient } from '@/lib/api-client';
 
 export default function userProfile() {
   const {userName}=useParams();
@@ -14,17 +15,19 @@ export default function userProfile() {
   const [loading,setLoading]=useState(true);
   const [sameUser,setSameUser]=useState(false);
   const {user}=useSelector(state=>state.user) || null;
+  const dispatch = useDispatch();
 
   useEffect(()=>{
 
     const getuserInfo= async()=>{
       try{
-        const response = await axios.get(`${GET_PROFILE_INFO}${userName}`);
+        const response = await apiClient.get(`${GET_PROFILE_INFO}${userName}`);
         if(user && user.id===response.data.user._id){
           setSameUser(true);
         }
         setuserInfo(response.data.user);
         console.log(response.data.user);
+        console.log('user: ',user);
       }catch(err){
         toast.error(err.response.data);
         console.log('error: ',err);
@@ -36,9 +39,40 @@ export default function userProfile() {
   },[userName])
 
 
+  const handleFollowChange=async()=>{
+    if(userInfo.followers.includes(user.id)){
+      try{
+        const response = await apiClient.patch(`${UNFOLLOW_USER}/${userInfo._id}`);
+        console.log('response: ',response.data);
+        toast.success(response.data);
+        setuserInfo((prevInfo) => ({
+          ...prevInfo,
+          followers: prevInfo.followers.filter((id) => id !== user.id),
+        }));
+      }catch(err){
+        toast.error(err.response.data);
+        console.log('error: ',err);
+      }
+    }
+    else{
+      try{
+        const response = await apiClient.patch(`${FOLLOW_USER}/${userInfo._id}`);
+        console.log('response: ',response.data);
+        setuserInfo((prevInfo) => ({
+          ...prevInfo,
+          followers: [...prevInfo.followers, user.id],
+        }));
+        toast.success(response.data);
+      }catch(err){
+        toast.error(err.response.data);
+        console.log('error: ',err);
+      }
+    }
+  }
   if(loading){
     return <Loading/>
   }
+
   return (
     <div className='h-screen w-full p-2'>
       {userInfo?(
@@ -56,6 +90,19 @@ export default function userProfile() {
                 <h1 className='text-2xl font-semibold'>{userInfo.firstName} {userInfo.lastName}</h1>
                 <p className='text-lg'>{userInfo.headline}</p>  
               </div>
+              {
+                user && !sameUser &&(
+                  <div className='flex gap-2'>
+                    <Button title='follow' onClick={()=>handleFollowChange()}  className='bg-input h-8'>
+                      {
+                        userInfo.followers.includes(user.id) ? 'Unfollow' : 'Follow'
+                      }
+                    </Button>
+                    <Button title='Message' className='bg-input h-8'>Message</Button>
+                  </div>
+                )
+              }
+
             </div>
             <div className='bg-white rounded-lg p-4 shadow-md'>
               <h1 className='text-xl font-bold underline'>About</h1>

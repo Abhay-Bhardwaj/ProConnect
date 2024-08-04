@@ -1,10 +1,12 @@
+import { apiClient } from '@/lib/api-client';
 import { LOGOUT_ROUTE } from '@/utils/constants';
-import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, current } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
 const initialState = {
   user: null,
+  currentChat: null,
 };
 
 const userSlice = createSlice({
@@ -17,16 +19,23 @@ const userSlice = createSlice({
     removeUserInfo: (state) => {
       state.user = null;
     },
+    setOtherUser: (state, action) => {
+      state.currentChat = action.payload?.otherUser;
+    },
+    removeOtherUser: (state) => {
+      state.currentChat = null;
+    }
   },
 });
 
-export const { setUserInfo, removeUserInfo } = userSlice.actions;
+export const { setUserInfo, removeUserInfo, setOtherUser, removeOtherUser } = userSlice.actions;
 
 export const logout = () => async (dispatch) => {
   try {
-    await axios.post(LOGOUT_ROUTE, {}, { withCredentials: true });
+    await apiClient.post(LOGOUT_ROUTE, {}, { withCredentials: true });
     Cookies.remove('jwt', { path: '/', secure: true, sameSite:'none'});
     dispatch(removeUserInfo());
+    toast.success('Logged out successfully');
   } catch (error) {
     console.error('Error logging out', error);
   }

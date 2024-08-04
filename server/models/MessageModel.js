@@ -1,31 +1,43 @@
 import mongoose from "mongoose";
 
-
 const messageSchema = new mongoose.Schema({
-    from:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        required:true
+    thread: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Thread',
+        required: true
     },
-    to:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        required:true
+    sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    text:{
-        type:String,
-        required:[true,'Text is required']
+    messageType: {
+        type: String,
+        enum: ['text', 'file'],
+        required: [true, 'Text is required']
     },
-    read:{
-        type:Boolean,
-        default:false
+    content: {
+        type: String,
+        required: function() {
+            return this.messageType === 'text';
+        }
     },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    fileUrl: {
+        type: String,
+        required: function() {
+            return this.messageType === 'file';
+        }
     },
-    updatedAt:{
-        type:Date,
-        default:Date.now
+    read: {
+        type: Boolean,
+        default: false
+    },
+    timeStamps: {
+        type: Date,
+        default: Date.now
     }
 });
+
+const Message = mongoose.model('Message', messageSchema);
+
+export default Message;

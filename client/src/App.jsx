@@ -7,10 +7,11 @@ import AuthHome from './pages/home/AuthHome';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { GET_USER_INFO } from './utils/constants';
-import axios from 'axios';
 import { setUserInfo } from './store/userSlice';
 import UserProfile from './pages/profiles/UserProfile';
 import Loading from './components/Loading';
+import ChatsContainer from './pages/chats/ChatsContainer';
+import { apiClient } from './lib/api-client';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
@@ -32,9 +33,7 @@ function App() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(GET_USER_INFO, {
-          withCredentials: true,
-        });
+        const response = await apiClient.get(GET_USER_INFO);
         if (response.status === 200 && response.data.user.id) {
           dispatch(setUserInfo(response.data));
         } else {
@@ -42,7 +41,6 @@ function App() {
         }
       } catch (err) {
         dispatch(setUserInfo(undefined));
-        console.log('error: ', err);
       } finally {
         setLoading(false);
       }
@@ -66,7 +64,8 @@ function App() {
         <Route path='/auth' element={<AuthRoute><Auth /></AuthRoute>} />
         <Route path='/profile-setting' element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path='u/:userName' element={<UserProfile />} />
-        <Route path='/loading' element={<Loading/>} />
+        <Route path='/chats/threads/' element={<PrivateRoute><ChatsContainer/></PrivateRoute>} />
+        <Route path='*' element={<Navigate to='/' />} />
       </Routes>
     </BrowserRouter>
   );

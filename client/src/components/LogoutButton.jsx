@@ -1,16 +1,15 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
-import { Button } from './ui/button';
 
-const LogoutButton = () => {
+const LogoutButton = ({children}) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  return <Button className='h-[90%] bg-input' onClick={handleLogout}>Logout</Button>;
+  return <div onClick={handleLogout}>{children}</div>;
 };
 
 export default LogoutButton;

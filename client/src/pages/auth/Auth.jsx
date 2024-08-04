@@ -74,7 +74,6 @@ const Auth = () => {
             navigate('/');
         }
       }catch(err){
-        console.log(err);
         toast.error(err.response? err.response.data: err.message);
       }finally{
         setLoading(false);
@@ -94,11 +93,9 @@ const Auth = () => {
             toast.success('Account Created Successfully');
             dispatch(setUserInfo({user: response.data.user}));
             navigate('/');
-
         }
 
       }catch(err){
-        console.log(err);
         toast.error(err.response.data);
       }finally{
         setLoading(false);
@@ -143,7 +140,7 @@ const Auth = () => {
                     <label className='text-sm font-semibold text-foreground'>Password</label>
                     <Input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} className='w-full p-2 border-2 border-gray-200 rounded-md' />
                   </div>
-                  <Button disabled={loading} onKeyDown={()=>handleSignUp()} onClick={()=>handleLogin()} className="bg-glow my-4">
+                  <Button disabled={loading} onClick={()=>handleLogin()} className="bg-glow my-4">
                     {
                       loading?<Loader className='animate-spin'/>: 'Log In'
                     }
@@ -168,7 +165,7 @@ const Auth = () => {
                     <label className='text-sm font-semibold text-foreground'>Confirm Password</label>
                     <Input type='password' value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='w-full p-2 border-2 border-gray-200 rounded-md' />
                   </div>
-                  <Button disabled={loading} onKeyDown={()=>handleSignUp()} onClick={()=>handleSignUp()} className="bg-glow my-2">
+                  <Button disabled={loading} onClick={()=>handleSignUp()} className="bg-glow my-2">
                     {
                       loading?<Loader className='animate-spin'/>: 'Sign Up'
                     }

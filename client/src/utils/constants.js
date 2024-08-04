@@ -10,3 +10,13 @@ export const LOGOUT_ROUTE=`${AUTH_ROUTES}/logout`;
 export const PROFILE_ROUTES=`${HOST}/api/profile`;
 export const GET_PROFILE_INFO=`${PROFILE_ROUTES}/userInfo/`;
 export const UPDATE_PROFILE_INFO=`${PROFILE_ROUTES}/update-profile`;
+export const UPLOAD_PROFILE_IMAGE=`${PROFILE_ROUTES}/upload-profile-image`;
+
+
+export const CONNECTION_ROUTES=`${HOST}/api/connection`;
+export const SEND_CONNECTION_REQUEST=`${CONNECTION_ROUTES}/send`;
+export const ACCEPT_CONNECTION_REQUEST=`${CONNECTION_ROUTES}/accept`;
+export const DECLINE_CONNECTION_REQUEST=`${CONNECTION_ROUTES}/decline`;
+export const LIST_CONNECTIONS=`${CONNECTION_ROUTES}/list`;
+export const FOLLOW_USER=`${CONNECTION_ROUTES}/follow`;
+export const UNFOLLOW_USER=`${CONNECTION_ROUTES}/unfollow`;

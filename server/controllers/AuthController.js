@@ -34,7 +34,11 @@ export const signUp= async (req,res)=>{
             id:user._id,
             userName:user.userName,
             headline:user.headline,
+            firstName:user.firstName,
+            lastName:user.lastName,
             image:user.image,
+            followers:user.followers,
+            following:user.following,
         }});
     }
     catch(err){
@@ -62,7 +66,7 @@ export const logIn= async (req,res)=>{
         const token=createToken(user.email,user.id);
 
         /* Adding JWT Cookies to the Response*/
-        res.cookie('jwt',token,{maxAge:maxAge,secure:true, sameSite:"none"});
+        res.cookie('jwt',token,{maxAge:maxAge*1000,secure:true, sameSite:"none"});
 
         return res.status(200).json({user:{
             email:user.email,
@@ -72,6 +76,8 @@ export const logIn= async (req,res)=>{
             firstName:user.firstName,
             lastName:user.lastName,
             image:user.image,
+            followers:user.followers,
+            following:user.following,
         }});
     }
     catch(err){
@@ -94,7 +100,10 @@ export const userInfo=async(req,res)=>{
             headline:user.headline,
             firstName:user.firstName,
             lastName:user.lastName,
-            image:user.image
+            image:user.image,
+            followers:user.followers,
+            following:user.following,
+
         }});
     }
     catch(err){
