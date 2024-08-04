@@ -198,7 +198,7 @@ export default function Profile() {
                 onChange={handleFileChange}
               />
             </div>
-            <div className='flex flex-row gap-1'>
+            <div className='flex flex-col sm:flex-row gap-1'>
               <div className='flex flex-col w-min'>
                 <label className='text-lg font-semibold'>First Name</label>
                 <input
