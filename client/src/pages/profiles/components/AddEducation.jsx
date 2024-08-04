@@ -85,7 +85,7 @@ export default function AddEducation({ setNewEducation, setEducationPopup, educa
               className='border border-input p-2'
             />
           </div>
-          <div className='flex flex-row gap-2'>
+          <div className='flex flex-col sm:flex-row gap-2'>
             <div className='flex flex-col gap-2'>
                 <label htmlFor='from'>From</label>
                 <input

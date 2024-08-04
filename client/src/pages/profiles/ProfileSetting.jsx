@@ -199,7 +199,7 @@ export default function Profile() {
               />
             </div>
             <div className='flex flex-row gap-1'>
-              <div className='flex flex-col'>
+              <div className='flex flex-col w-min'>
                 <label className='text-lg font-semibold'>First Name</label>
                 <input
                   name='firstName'
@@ -208,7 +208,7 @@ export default function Profile() {
                   className='border-2 border-gray-300 rounded-md p-1'
                 />
               </div>
-              <div className='flex flex-col'>
+              <div className='flex flex-col w-min'>
                 <label className='text-lg font-semibold'>Last Name</label>
                 <input
                   name='lastName'

@@ -9,7 +9,7 @@ export default function NavBar() {
   const {user}=useSelector((state) => state.user);
   return (
     <nav className='sticky flex p-5 top-0 w-full h-12 z-10 bg-white items-center justify-between'>
-      <a title='Home' href='/' className='hover:cursor-pointer'><img src='/assets/logo.png' alt='logo' className='h-8'/></a>
+      <a title='Home' href='/' className='hover:cursor-pointer'><img src='/assets/logo.png' alt='logo' className='h-4 sm:h-8'/></a>
       <div className='flex flex-row gap-4 justify-center'>
         <a className='grid place-items-center' href='/'>
           <div className='group cursor-pointer grid place-items-center hover:stroke-glow'>
