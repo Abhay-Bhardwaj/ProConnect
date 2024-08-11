@@ -1,4 +1,3 @@
-import cloudinaryConfig from "../config/cloudinaryConfig.js";
 import { deleteImage, uploader } from "../helper/clouduploader.js";
 import Profile from "../models/ProfileModel.js";
 import User from "../models/UserModel.js";

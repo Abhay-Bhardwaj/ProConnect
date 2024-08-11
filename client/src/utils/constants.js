@@ -20,3 +20,12 @@ export const DECLINE_CONNECTION_REQUEST=`${CONNECTION_ROUTES}/decline`;
 export const LIST_CONNECTIONS=`${CONNECTION_ROUTES}/list`;
 export const FOLLOW_USER=`${CONNECTION_ROUTES}/follow`;
 export const UNFOLLOW_USER=`${CONNECTION_ROUTES}/unfollow`;
+
+
+
+export const THREAD_ROUTES=`${HOST}/api/thread`;
+export const GET_THREADS=`${THREAD_ROUTES}/get-threads`;
+export const CREATE_GROUP_THREAD=`${THREAD_ROUTES}/create-group`;
+export const CREATE_INDIVIDUAL_THREAD=`${THREAD_ROUTES}/create-individual`;
+export const NEW_MESSAGE=`${THREAD_ROUTES}/new-message`;
+export const GET_MESSAGES=`${THREAD_ROUTES}/get-messages`;

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
+import NewChat from './NewChat'
 
 export default function ChatOptions() {
     const [search, setSearch] = useState('')
@@ -16,7 +17,7 @@ export default function ChatOptions() {
             </div>
         </div>
         <div className=''>
-            <Button title='New Chat' className='bg-input h-8 w-8'>+</Button>
+            <NewChat/>
         </div>
     </div>
   )

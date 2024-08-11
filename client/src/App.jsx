@@ -12,6 +12,7 @@ import UserProfile from './pages/profiles/UserProfile';
 import Loading from './components/Loading';
 import ChatsContainer from './pages/chats/ChatsContainer';
 import { apiClient } from './lib/api-client';
+import JobList from './pages/jobs/JobList';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
@@ -65,7 +66,9 @@ function App() {
         <Route path='/profile-setting' element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path='u/:userName' element={<UserProfile />} />
         <Route path='/chats/threads/' element={<PrivateRoute><ChatsContainer/></PrivateRoute>} />
-        <Route path='*' element={<Navigate to='/' />} />
+        <Route path='/chats/threads/:id' element={<PrivateRoute><ChatsContainer/></PrivateRoute>} />
+        <Route path='/jobs/' element={<JobList/>} />
+        {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,6 @@
-import { FOLLOW_USER, GET_PROFILE_INFO, UNFOLLOW_USER } from '@/utils/constants';
+import { CREATE_INDIVIDUAL_THREAD, FOLLOW_USER, GET_PROFILE_INFO, GET_THREADS, UNFOLLOW_USER } from '@/utils/constants';
 import React, { useEffect, useState } from 'react'
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { toast } from 'sonner';
 import Experience from './components/Experience';
 import { UserRoundPen } from 'lucide-react';
@@ -16,6 +16,7 @@ export default function userProfile() {
   const [sameUser,setSameUser]=useState(false);
   const {user}=useSelector(state=>state.user) || null;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(()=>{
 
@@ -37,6 +38,21 @@ export default function userProfile() {
     }
     getuserInfo();
   },[userName])
+
+  const handleMessageClick=()=>{
+    const checkThread= async()=>{ 
+      try{
+          const newThread = await apiClient.post(CREATE_INDIVIDUAL_THREAD, {otherUser: userInfo._id});
+          console.log('newThread: ',newThread);
+          navigate(`/chats/threads/${newThread.data.threadId}`);
+      }catch(err){
+        console.log('error: ',err);
+        toast.error(err.response.data);
+        
+      }
+    }
+    checkThread();
+  }
 
 
   const handleFollowChange=async()=>{
@@ -98,7 +114,7 @@ export default function userProfile() {
                         userInfo.followers.includes(user.id) ? 'Unfollow' : 'Follow'
                       }
                     </Button>
-                    <Button title='Message' className='bg-input h-8'>Message</Button>
+                    <Button onClick={()=>handleMessageClick()} title='Message' className='bg-input h-8'>Message</Button>
                   </div>
                 )
               }
