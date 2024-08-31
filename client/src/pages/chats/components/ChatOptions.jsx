@@ -3,8 +3,7 @@ import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
 import NewChat from './NewChat'
 
-export default function ChatOptions() {
-    const [search, setSearch] = useState('')
+export default function ChatOptions({setSearch, search}) {
 
   return (
     <div className='flex flex-row gap-2 justify-between mb-2'>

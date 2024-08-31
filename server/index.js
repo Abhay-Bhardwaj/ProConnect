@@ -7,13 +7,17 @@ import authRoutes from './routes/AuthRoutes.js';
 import profileRoutes from './routes/ProfileRoutes.js';
 import ConnectionRoutes from './routes/ConnectionRoutes.js';
 import ThreadRoutes from './routes/ThreadRoutes.js';
+import setupSocket from './socket.js';
+import CompanyRoutes from './routes/CompanyRoutes.js';
+import JobRoutes from './routes/JobRoutes.js';
+
 
 dotenv.config();
-const app=express();
+const app = express(); 
+
 const PORT=process.env.PORT || 5000;
 const dataBase_URL=process.env.MONGO_URI;
 const origin=process.env.ORIGIN || 'http://localhost:3000';
-
 
 app.use(cors(
     {
@@ -35,6 +39,8 @@ app.use('/api/auth',authRoutes);
 app.use('/api/profile',profileRoutes);
 app.use('/api/connection',ConnectionRoutes);
 app.use('/api/thread',ThreadRoutes);
+app.use('/api/company',CompanyRoutes);
+app.use('/api/job',JobRoutes);
 
 
 
@@ -47,11 +53,9 @@ mongoose.connect(dataBase_URL).then(()=>{
 
 
 /* Server Start*/ 
-app.listen(PORT,()=>{
+const server=app.listen(PORT,()=>{
     console.log('Server is running on port',PORT);
 });
 
-
-
-
-
+/* Socket Connection*/
+setupSocket(server);

@@ -43,6 +43,24 @@ export const acceptConnectionRequest = async (req, res) => {
   }
 };
 
+export const getFollowersFollowing = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId)
+    .populate('following', 'userName email firstName lastName image headline')
+    .populate('followers', 'userName email firstName lastName image headline');
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    
+    return res.status(200).json({ data:{following: user.following, followers: user.followers}, status: 'success' });
+    
+  } catch (err) {
+    console.log('Error:', err.message);
+    return res.status(500).send('Internal Server Error: ' + err.message);
+  }
+}
+
 export const declineConnectionRequest = async (req, res) => {
   try {
     const {requestId} = req.body;
@@ -65,18 +83,38 @@ export const declineConnectionRequest = async (req, res) => {
 export const listConnections = async (req, res) => {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId).populate('following', 'userName email firstName lastName image');
+    const user = await User.findById(userId)
+      .populate('following', 'userName email firstName lastName image headline')
+      .populate('followers', 'userName email firstName lastName image headline');
 
     if (!user) {
       return res.status(404).send('User not found');
     }
 
-    return res.status(200).json(user.following);
+    // Combine following and followers
+    const combinedConnections = [
+      ...user.following.map(follow => ({ ...follow.toObject(), type: 'following' })),
+      ...user.followers.map(follow => ({ ...follow.toObject(), type: 'follower' }))
+    ];
+
+    // Create a map to remove duplicates based on user ID
+    const uniqueConnectionsMap = new Map();
+    combinedConnections.forEach(connection => {
+      if (!uniqueConnectionsMap.has(connection._id.toString())) {
+        uniqueConnectionsMap.set(connection._id.toString(), connection);
+      }
+    });
+
+    // Convert map values to an array
+    const uniqueConnections = Array.from(uniqueConnectionsMap.values());
+
+    return res.status(200).json(uniqueConnections);
   } catch (err) {
     console.log('Error:', err.message);
     return res.status(500).send('Internal Server Error: ' + err.message);
   }
 };
+
 
 
 export const followUser = async (req, res) => {
@@ -121,6 +159,17 @@ export const unfollowUser = async (req, res) => {
     return res.status(200).send('Unfollowed');
   }catch(err){
     console.log('Error at unfollowUser Controller:', err.message);
+    return res.status(500).send('Internal Server Error: ' + err.message);
+  }
+}
+
+export const GetAllUsers = async (req, res) => {
+  try{
+    const users = await User.find();
+    return res.status(200).json(users);
+  }
+  catch(err){
+    console.log('Error at GetAllUsers Controller:', err.message);
     return res.status(500).send('Internal Server Error: ' + err.message);
   }
 }

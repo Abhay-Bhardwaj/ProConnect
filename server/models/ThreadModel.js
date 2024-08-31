@@ -15,7 +15,7 @@ const threadSchema = new mongoose.Schema({
     participants: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Users',
+            ref: 'User',
             required: true
         }
     ],

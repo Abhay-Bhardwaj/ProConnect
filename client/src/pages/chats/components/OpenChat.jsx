@@ -1,85 +1,131 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { apiClient } from '@/lib/api-client';
-import { GET_MESSAGES, NEW_MESSAGE } from '@/utils/constants';
-import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { GET_MESSAGES } from '@/utils/constants';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import SingleChat from './components/SingleChat';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSocket } from '@/context/SocketContext';
+import { selectThread, setMessages } from '@/store/chatSlice';
+import { useParams } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
-export default function OpenChat({threadList}) {
-  const {id}= useParams();
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState(''); 
+export default function OpenChat({ threadList }) {
+  const { id } = useParams();
+  const { chat, selectedThread } = useSelector((state) => state.chat);
+  const { user } = useSelector((state) => state.user);
+  const socket = useSocket();
+  const dispatch = useDispatch();
+  const [inputMessage, setInputMessage] = useState('');
+
   const [chatInfo, setChatInfo] = useState();
-  const listRef = useRef(null);
-
+  const [loading, setLoading] = useState(false);
+  const [sentLoading, setSentLoading] = useState(false);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const getchatInfo= threadList.find((thread)=>thread.id===id);
-        console.log('chat info:', getchatInfo);
-        setChatInfo(getchatInfo);
-        if(!getchatInfo){
-          return;
+    if (id) {
+      console.log('Dispatching selectThread with id:', id);
+      dispatch(selectThread(id));
+    }
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (selectedThread) {
+      setLoading(true);
+      const fetchMessages = async () => {
+        try {
+          const getChatInfo = threadList.find((thread) => thread.id === selectedThread);
+          console.log('chat info:', getChatInfo);
+          setChatInfo(getChatInfo);
+          if (!getChatInfo) {
+            setLoading(false);
+            return;
+          }
+          const res = await apiClient.get(`${GET_MESSAGES}/${selectedThread}`);
+          console.log('messages: ', res);
+          dispatch(setMessages(res.data));
+          setLoading(false);
+        } catch (error) {
+          console.log('Error Fetching Messages: ', error.message);
+          toast.error('Error Fetching Messages');
+          setLoading(false);
         }
-        const res = await apiClient.get(`${GET_MESSAGES}/${id}`);
-        console.log('messages: ',res);
-        setMessages(res.data);
-      } catch (error) {
-        console.log('Error Fetching Messages: ', error.message);
-      }
-    };
-    fetchMessages();
-  },[id, threadList]);
+      };
+      fetchMessages();
+    }
+  }, [selectedThread, threadList, dispatch, id]);
 
+  useEffect(() => {
+    console.log('selectedThread updated:', selectedThread);
+  }, [selectedThread]);
 
-
-  if(!chatInfo){
-    return <div>Chat Not Found</div>
+  if (selectedThread === null) {
+    return <div>No Chat is Selected</div>;
+  }
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   const handleSendMessage = async () => {
+    setSentLoading(true);
     try {
-      const res = await apiClient.post(NEW_MESSAGE, {
+
+      if (!inputMessage) {
+        toast.error('Message is required');
+        return;
+      }
+      socket.emit('sendMessage', {
         threadId: chatInfo.id,
+        sender: user.id,
         message: inputMessage,
         messageType: 'text',
       });
-
-      if(res.status===200){
-        setMessages([...messages, res.data]);
-        setInputMessage('');
-      }
-
-    }catch(err){
+      setInputMessage('');
+    } catch (err) {
       console.log('Error Sending Message: ', err.message);
       toast.error('Error Sending Message');
     }
+    setSentLoading(false);
+  };
+
+  const renderChat = () => {
+    let lastDate=null;
+    return chat.map((message, index) => {
+      const showDate = !lastDate || (new Date(lastDate).toDateString() !== new Date(message.timeStamps).toDateString());
+      lastDate = message.timeStamps;
+      return (
+        <div key={index}>
+          {showDate && (
+            <div className='text-center text-xs text-gray-500'>
+              {new Date(message.timeStamps).toDateString()}
+            </div>
+          )}
+          <SingleChat message={message} chatInfo={chatInfo} />
+        </div>
+      );
+    });
   }
+
   return (
     <div className='w-2/3 h-full'>
-      <div className='flex flex-col justify-between h-full p-1' >
+      <div className='flex flex-col justify-between h-full p-1'>
         <div className='h-10 p-1 bg-background shadow-sm rounded-b-md'>
-          {
-            chatInfo && 
-            <div className='flex align-middle items-center'>
-              <img src={chatInfo.otherUser.image} alt="avatar" className='h-8 rounded-full'/>
-                <p> {chatInfo.otherUser.fullName} </p>
+          {chatInfo && (
+            <div className='flex align-middle items-center gap-1'>
+              <img src={chatInfo.otherUser.image} alt='avatar' className='h-8 w-8 rounded-full' />
+              <p> {chatInfo.otherUser.fullName} </p>
             </div>
-          }
+          )}
         </div>
         <div className='overflow-y-scroll h-72 m-2'>
-          {messages && messages.map((message, index) => (
-            <SingleChat key={index}  message={message} chatInfo={chatInfo} />
-          ))}
+          {renderChat()}
         </div>
         <div className='flex flex-row gap-1'>
-          <Input value={inputMessage} onChange={(e)=>{setInputMessage(e.target.value)}}/>
-          <Button onClick={()=>{handleSendMessage()}} >Send</Button>
+          <Input value={inputMessage} onChange={(e) => { setInputMessage(e.target.value); }} />
+          <Button onClick={handleSendMessage}>{sentLoading? <Loader2 className='animate-spin'/>:'Send'}</Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

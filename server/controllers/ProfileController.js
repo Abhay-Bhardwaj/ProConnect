@@ -1,4 +1,4 @@
-import { deleteImage, uploader } from "../helper/clouduploader.js";
+import { deleteImage, ProfileUploader } from "../helper/clouduploader.js";
 import Profile from "../models/ProfileModel.js";
 import User from "../models/UserModel.js";
 
@@ -78,7 +78,7 @@ export const uploadProfileImage = async (req, res) => {
           const filePath = req.file.path;
       
           // Upload to Cloudinary
-          const result = await uploader({ filePath });
+          const result = await ProfileUploader({ filePath });
           // Here you can update the user's profile with the image URL
           // For example, updating the user's profile in the database
           const userId = req.userId;
@@ -96,10 +96,11 @@ export const uploadProfileImage = async (req, res) => {
                 await deleteImage(getPublicId(user.image));
           }
           await User.updateOne({ _id: userId }, { image: result});
-          res.status(200).send('Image uploaded successfully');
+          return res.status(200).json({imageUrl:result});
 
     }catch(err){
         console.log('Error at ProfileImageChange:', err.message);
         return res.status(500).send("Internal Server Error: " + err.message);
     }
 }
+

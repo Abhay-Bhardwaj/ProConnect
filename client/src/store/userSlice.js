@@ -24,7 +24,8 @@ const userSlice = createSlice({
     },
     removeOtherUser: (state) => {
       state.currentChat = null;
-    }
+    },
+
   },
 });
 
@@ -35,7 +36,11 @@ export const logout = () => async (dispatch) => {
     await apiClient.post(LOGOUT_ROUTE, {}, { withCredentials: true });
     Cookies.remove('jwt', { path: '/', secure: true, sameSite:'none'});
     dispatch(removeUserInfo());
-    toast.success('Logged out successfully');
+    setTimeout(() => {
+      toast.success('Logged out successfully');
+    }, 1000);
+    window.location.reload(false);
+    
   } catch (error) {
     console.error('Error logging out', error);
   }

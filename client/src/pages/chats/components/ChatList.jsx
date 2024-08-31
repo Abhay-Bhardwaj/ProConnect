@@ -1,19 +1,33 @@
-import React from 'react'
+import { selectThread } from '@/store/chatSlice';
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-
-export default function ChatList({threadList}) {
+export default function ChatList({threadList, search}) {
+  const dispatch = useDispatch();
   const navigate= useNavigate();
+  const [filteredThreadList, setFilteredThreadList]= useState([]);
   console.log('threadList: ',threadList);
   const handleChatClick=(threadId)=>{
+    dispatch(selectThread(threadId));
     navigate(`/chats/threads/${threadId}`);
   }
+
+  useEffect(()=>{
+    if(search){
+      const NewthreadList= threadList.filter(thread=>thread.otherUser.fullName.toLowerCase().includes(search.toLowerCase()));
+      setFilteredThreadList(NewthreadList);
+    }
+    else{
+      setFilteredThreadList(threadList);
+    }
+  }, [search, threadList])
 
   return (
     <div className='w-1/3'>
       <div className='flex flex-col gap-2'>
         {
-          threadList.map((thread)=>(
+          filteredThreadList.map((thread)=>(
             <div key={thread.id} onClick={()=>{handleChatClick(thread.id)}} className='flex items-center gap-2 p-2 border-b border-gray-200 hover:cursor-pointer hover:bg-slate-200 transition-all duration-300'>
               <div className='w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center'>
                 <img src={thread.otherUser.image} alt={thread.name} className='w-10 h-10 rounded-full'/>

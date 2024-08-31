@@ -153,7 +153,7 @@ export const getMessages = async (req, res) => {
             return res.status(400).send('Thread does not exist');
         }
 
-        const messages = await Message.find({thread: id}).sort({ timestamp: 1 });;
+        const messages = await Message.find({thread: id}).sort({ timestamp: 1 });
 
         return res.status(200).send(messages);
     }catch(err){

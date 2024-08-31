@@ -162,6 +162,7 @@ export default function Profile() {
   };
 
   const handleFileChange = (e) => {
+    console.log('e.target.files[0]: ', e.target.files);
     setProfileImage(e.target.files[0]);
   };
 
@@ -183,13 +184,14 @@ export default function Profile() {
           <div className='bg-white rounded-lg p-4 shadow-md'>
             <div className='flex flex-col '>
               <div onClick={handleFileInputClick}>
-                <img src='/assets/cover-image.jpg' alt='cover' className='w-full h-40 object-cover rounded-md' />
+                <img src='/assets/cover-image.jpg' alt='cover' className='w-full h-40 object-cover  rounded-md' />
               </div>
               <img
                 src={profileData.image ? profileData.image : '/assets/defaultUserDP.jpg'}
                 alt='profile'
-                className='relative -top-10 w-32 h-32 rounded-full -mb-10 cursor-pointer'
+                className='relative -top-10 w-32 h-32 rounded-full bg-white -mb-10 cursor-pointer'
                 onClick={handleFileInputClick}
+
               />
               <input
                 type='file'

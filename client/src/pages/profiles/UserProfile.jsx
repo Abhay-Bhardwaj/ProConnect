@@ -100,7 +100,7 @@ export default function userProfile() {
                 <div>
                   <img src='/assets/cover-image.jpg' alt="cover" className='w-full h-40 object-cover rounded-md' />
                 </div>
-                <img src={userInfo.image ? userInfo.image : '/assets/defaultUserDP.jpg'} alt="profile" className='relative -top-10 w-32 h-32 rounded-full -mb-10' />
+                <img src={userInfo.image ? userInfo.image : '/assets/defaultUserDP.jpg'} alt="profile" className='relative -top-10 w-32 h-32 rounded-full bg-white -mb-10' />
               </div>
               <div>
                 <h1 className='text-2xl font-semibold'>{userInfo.firstName} {userInfo.lastName}</h1>

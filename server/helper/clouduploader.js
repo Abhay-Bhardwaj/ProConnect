@@ -2,7 +2,7 @@ import cloudinary from "../config/cloudinaryConfig.js";
 import fs from 'fs';
 
 
-export const uploader = async ({filePath}) => {
+export const ProfileUploader = async ({filePath}) => {
     try {
         const result = await cloudinary.uploader.upload(filePath, {
             folder: 'profile_images',
@@ -13,6 +13,20 @@ export const uploader = async ({filePath}) => {
         console.log('Error at uploadImage:', err.message);
     }
 }
+
+export const CompanyUploader = async ({filePath}) => {
+    try {
+        const result = await cloudinary.uploader.upload(filePath, {
+            folder: 'company_images',
+        });
+        fs.unlinkSync(filePath);
+        return result.secure_url;
+    }catch(err){
+        console.log('Error at uploadImage:', err.message);
+    }
+}
+
+
 
 export const deleteImage = async (public_id) => {
     try {

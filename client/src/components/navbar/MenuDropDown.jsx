@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import { useSelector } from 'react-redux'
-import {ChevronDown, LogOut, Settings, User, UserPen } from 'lucide-react';
+import {ChevronDown, LogOut, Settings, User, UserPen, UserPlus } from 'lucide-react';
 import LogoutButton from '../LogoutButton';
   
 
@@ -39,10 +39,16 @@ export default function MenuDropDown() {
                             Profile
                     </DropdownMenuItem>
                 </a>
-                <a href={`/profile-setting`}>
+                {/* <a href={`/profile-setting`}>
                     <DropdownMenuItem>
                             <Settings className="mr-2 h-4 w-4" />
                             Edit Profile
+                    </DropdownMenuItem>
+                </a> */}
+                <a href={`/talent/dashboard`}>
+                    <DropdownMenuItem>
+                            <UserPlus className="mr-2 h-4 w-4" />
+                            Hire Talent
                     </DropdownMenuItem>
                 </a>
                 <LogoutButton>

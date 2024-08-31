@@ -1,5 +1,5 @@
 import Home from './pages/home/Home';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Auth from './pages/auth/Auth';
 import { useSelector, useStore } from 'react-redux';
 import Profile from './pages/profiles/ProfileSetting';
@@ -12,7 +12,13 @@ import UserProfile from './pages/profiles/UserProfile';
 import Loading from './components/Loading';
 import ChatsContainer from './pages/chats/ChatsContainer';
 import { apiClient } from './lib/api-client';
-import JobList from './pages/jobs/JobList';
+import JobCreate from './pages/jobs/admin/JobCreate';
+import ImageEdit from './components/ImageEdit';
+import JobDashBoard from './pages/jobs/admin/JobDashBoard';
+import JobsPage from './pages/jobs/client/JobsPage';
+import JobDetailsAdmin from './pages/jobs/admin/JobDetailsAdmin';
+import ConnectionsPage from './pages/connections/ConnectionsPage';
+import AddConnections from './pages/connections/AddConnections';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
@@ -59,18 +65,23 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
       <Routes>
-        <Route path='/' element={user ? <AuthHome /> : <Home />} />
+        <Route path='/' element={<PrivateRoute> <Profile/></PrivateRoute>} />
         <Route path='/auth' element={<AuthRoute><Auth /></AuthRoute>} />
         <Route path='/profile-setting' element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path='u/:userName' element={<UserProfile />} />
         <Route path='/chats/threads/' element={<PrivateRoute><ChatsContainer/></PrivateRoute>} />
         <Route path='/chats/threads/:id' element={<PrivateRoute><ChatsContainer/></PrivateRoute>} />
-        <Route path='/jobs/' element={<JobList/>} />
+        <Route path='/jobs/' element={<JobsPage/>}/>
+        <Route path='/talent/post-a-job' element={<PrivateRoute><JobCreate/></PrivateRoute>}/>
+        <Route path='/talent/dashboard' element={<PrivateRoute><JobDashBoard/></PrivateRoute>}/>
+        <Route path='/image' element={<ImageEdit/>}/>
+        <Route path='/talent/dashboard' element={<JobDashBoard/>}/>
+        <Route path='/talent/dashboard/jobdetail/:id' element={<JobDetailsAdmin/>}/>
+        <Route path='/connections' element={<ConnectionsPage/>}/>
+        <Route path='/connections/search' element={<AddConnections/>}/>
         {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
-    </BrowserRouter>
   );
 }
 

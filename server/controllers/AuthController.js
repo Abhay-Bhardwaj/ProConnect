@@ -20,10 +20,13 @@ export const signUp= async (req,res)=>{
         if(userExist){
             return res.status(400).send("User Already Exist");
         }
+        
+        const image='https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png';
+    
         const firstName=fullName.split(' ')[0];
         const lastName=fullName.split(' ')[1] || "";
         /*Creating User*/
-        const user=await User.create({email,password,firstName,lastName});
+        const user=await User.create({email,password,firstName,lastName, image});
         const token=createToken(user.email,user.id);
 
         /* Adding JWT Cookies to the Response*/

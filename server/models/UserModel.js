@@ -42,12 +42,12 @@ const userSchema = new mongoose.Schema({
     },
     following:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Users',
+        ref:'User',
         required:false
     }],
     followers:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Users',
+        ref:'User',
         required:false,
     }],
     createdAt:{
@@ -76,6 +76,6 @@ userSchema.pre('save', async function(next){
     next();
 });
 
-const User=mongoose.model('Users',userSchema);
+const User=mongoose.model('User',userSchema);
 
 export default User;
