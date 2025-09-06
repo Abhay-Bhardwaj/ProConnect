@@ -17,7 +17,7 @@ const app = express();
 
 const PORT=process.env.PORT || 5000;
 const dataBase_URL=process.env.MONGO_URI;
-const origin=process.env.ORIGIN || 'http://localhost:3000';
+const origin=process.env.ORIGIN || 'http://localhost:5173';
 
 app.use(cors(
     {

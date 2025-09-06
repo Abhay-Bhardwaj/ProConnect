@@ -1,5 +1,5 @@
-import Home from './pages/home/Home';
-import { Navigate, Route, Routes } from 'react-router-dom';
+﻿import Home from './pages/home/Home';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Auth from './pages/auth/Auth';
 import { useSelector, useStore } from 'react-redux';
 import Profile from './pages/profiles/ProfileSetting';
@@ -19,11 +19,12 @@ import JobsPage from './pages/jobs/client/JobsPage';
 import JobDetailsAdmin from './pages/jobs/admin/JobDetailsAdmin';
 import ConnectionsPage from './pages/connections/ConnectionsPage';
 import AddConnections from './pages/connections/AddConnections';
+import NavBar from './components/navbar/NavBar';
 
 const PrivateRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
   const isAuthenticated = !!user;
-  return isAuthenticated ? children : <Navigate to='/auth' />;
+  return isAuthenticated ? children : <Navigate to='/home' />;
 }
 
 const AuthRoute = ({ children }) => {
@@ -32,9 +33,16 @@ const AuthRoute = ({ children }) => {
   return isAuthenticated ? <Navigate to='/' /> : children;
 }
 
+// Component to handle root route based on authentication
+const RootRoute = () => {
+  const { user } = useSelector((state) => state.user);
+  return user ? <AuthHome /> : <Home />;
+}
+
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,9 +72,16 @@ function App() {
     return <Loading/>;
   }
 
+  // Don't show NavBar on landing page or auth page
+  const shouldShowNavBar = user && location.pathname !== '/home' && location.pathname !== '/auth';
+
   return (
+    <>
+      {/* Only show NavBar for authenticated users and not on landing/auth pages */}
+      {shouldShowNavBar && <NavBar />}
       <Routes>
-        <Route path='/' element={<PrivateRoute> <Profile/></PrivateRoute>} />
+        <Route path='/' element={<RootRoute />} />
+        <Route path='/home' element={<Home />} />
         <Route path='/auth' element={<AuthRoute><Auth /></AuthRoute>} />
         <Route path='/profile-setting' element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path='u/:userName' element={<UserProfile />} />
@@ -78,10 +93,11 @@ function App() {
         <Route path='/image' element={<ImageEdit/>}/>
         <Route path='/talent/dashboard' element={<JobDashBoard/>}/>
         <Route path='/talent/dashboard/jobdetail/:id' element={<JobDetailsAdmin/>}/>
-        <Route path='/connections' element={<ConnectionsPage/>}/>
-        <Route path='/connections/search' element={<AddConnections/>}/>
+        <Route path='/connections' element={<PrivateRoute><ConnectionsPage/></PrivateRoute>}/>
+        <Route path='/connections/search' element={<PrivateRoute><AddConnections/></PrivateRoute>}/>
         {/* <Route path='*' element={<Navigate to='/' />} /> */}
       </Routes>
+    </>
   );
 }
 
